@@ -1,0 +1,43 @@
+{
+  "vulnType": "SQL Injection",
+  "layer": ["API"],
+  "languages": ["Java"],
+  "frameworks": ["Spring Boot"],
+  "severity": "High",
+
+  "detectionPattern": "User-controlled input concatenated into SQL query strings",
+
+  "vulnerablePattern": {
+    "codeTemplate": "String query = \"SELECT ... '\" + userInput + \"'\";"
+  },
+
+  "fixPattern": {
+    "codeTemplate": "String query = \"SELECT ... WHERE field = ?\"; jdbcTemplate.query(query, new Object[]{ userInput });"
+  },
+
+  "fixRecipe": [
+    "Identify user-controlled variables passed into SQL string",
+    "Replace concatenation with prepared statement",
+    "Bind parameters instead of injecting values",
+    "Return typed results using ORM or safe JDBC API"
+  ],
+
+  "constraints": [
+    "Requires framework support for prepared statements",
+    "User input validation in UI optional but recommended"
+  ],
+
+  "validationRules": [
+    "Input length 3-30",
+    "alphanumeric with underscore/dot"
+  ],
+
+  "patchNotes": [
+    "Avoid string concatenation even for numeric fields",
+    "Avoid dynamic ORDER BY unless whitelisted"
+  ],
+
+  "alternateFixes": [
+    "ORM using JPA @Query with parameters"
+  ]
+}
