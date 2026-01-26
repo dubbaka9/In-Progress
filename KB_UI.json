@@ -1,0 +1,51 @@
+{
+  "vulnType": "Cross-Site Scripting (XSS)",
+  "layer": ["UI"],
+  "category": "Stored XSS",
+  "languages": ["TypeScript"],
+  "frameworks": ["React"],
+  "severity": "High",
+
+  "detectionPattern": "Rendering user-controlled HTML without sanitization or encoding",
+
+  "vulnerablePattern": {
+    "codeTemplate": "<div dangerouslySetInnerHTML={{ __html: userComment }} />"
+  },
+
+  "fixPattern": {
+    "codeTemplate": "<p>{sanitizedComment}</p>"
+  },
+
+  "fixRecipe": [
+    "Retrieve user-controlled content from backend as plain text",
+    "Apply sanitization or filtering if rich text is allowed",
+    "Render with React text interpolation instead of raw HTML"
+  ],
+
+  "constraints": [
+    "If rich formatting is required, allow-list only bold/italic/links",
+    "Do not trust client sanitization alone"
+  ],
+
+  "validationRules": [
+    "Reject '<script>'",
+    "Reject 'javascript:' URLs",
+    "Reject event handlers (e.g., 'onload=')"
+  ],
+
+  "sanitizationOptions": [
+    "DOMPurify",
+    "sanitize-html",
+    "Custom allow-list"
+  ],
+
+  "patchNotes": [
+    "Never pass raw HTML to dangerouslySetInnerHTML unless fully sanitized",
+    "Prefer plain text rendering for user comments"
+  ],
+
+  "alternateFixes": [
+    "Server-side HTML encoding",
+    "Backend sanitization of user-generated content"
+  ]
+}
